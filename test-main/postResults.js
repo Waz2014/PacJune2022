@@ -2,6 +2,7 @@ const fetch = require('node-fetch'); // Used to make calls to APIs
 
 const PostResults = async(data) =>{
     console.log('Results Data: ',data) // Shows the data given to the post call
+    try{
     const results = await fetch(
         '/results',
         {
@@ -11,6 +12,9 @@ const PostResults = async(data) =>{
         })
 
     return results
+    }catch(e){
+        console.log(e)
+    }
 
 }
 

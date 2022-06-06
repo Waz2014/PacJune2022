@@ -3,10 +3,11 @@ const fs = require('fs'); // Used to open and read the files
 const cheerio = require('cheerio') // Used to load and read html 
 const postResults = require('./postResults') // Given the output of the html this will make the post call requested
 const moment = require('moment') // Gets you the date time of the current day
+const writeStream = fs.createWriteStream(`post.txt`); 
 
 const parseFiles = async () =>{
-    let totalCount = 0
-    let passCount = 0
+    let totalTestCount = 0
+    let passTestCount = 0
     let failCount = 0
     const failDescriptions = []
     const directoryPath = path.join(__dirname, 'reports');
@@ -21,13 +22,13 @@ const parseFiles = async () =>{
                 const document = cheerio.load(data) // Load the raw data into an HTML document that Cheerio can parse and find specific html elements in
 
                 document('[class="testcase success"]').each((_i,_elm)=>{
-                    totalCount++
-                    passCount++
+                    totalTestCount++
+                    passTestCount++
                 })
 
                 document('[class="testcase error"]').each((_i,elm)=>{
                     failCount++
-                    totalCount++
+                    totalTestCount++
                     const failureNote = {} // Object used to construct failure description
                     const failureParent = cheerio.load(elm.parent.parent) // loads the parent parent div of the testcase error in order to find testcase name 
                     const testName =  failureParent('[class="name"]').html() // Finds name of suite error
@@ -35,6 +36,7 @@ const parseFiles = async () =>{
                     let failureMessage = failureHtml('[class="name"]').html()
                     failureNote[testName] = failureMessage
                     failDescriptions.push(failureNote)
+                    createWriteStream(failureNote);
                 })
             } catch (err) {
                 console.error(err);
@@ -42,8 +44,8 @@ const parseFiles = async () =>{
         });
 
     const results =  {
-        TOTAL_TESTS: totalCount, 
-        PASSED_TESTS: passCount, 
+        TOTAL_TESTS: totalTestCount, 
+        PASSED_TESTS: passTestCount, 
         FAILED_TESTS:failCount, 
         ERROR_DETAILS: failDescriptions,
         DATETIME: moment().format('YYYY-MM-DDTHH:mm:ss')
