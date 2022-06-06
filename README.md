@@ -2,10 +2,11 @@
 Exercise 
 
 1. You run this in a VS Code Editor. 
-2. Type yarn command hit enter
-3. Type yarn test hit enter.
-4. Read the result in the console.
-5. Cosole will have read the following. 
+2. Type npm install --gobal yarn
+3. Type yarn command hit enter
+4. Type yarn test hit enter.
+5. Read the result in the console.
+6. Console will read the following. 
 
 
 
